@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Culina</string>
+    <string name="spoonacularApiKey">479576f9a6aa4b90b8d526641230816a</string>
+    <string name="back">Back</string>
+</resources>
