@@ -13,14 +13,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Culina"
-        android:name=".MyApplication"
         tools:targetApi="31">
-        <activity android:name=".ui.activities.detail.DetailActivity"
+        <activity android:name=".ui.activity.detail.DetailActivity"
             android:exported="false"
             android:label="DetailActivity"
             android:theme="@style/Theme.Culina" />
         <activity
-            android:name=".ui.activities.main.MainActivity"
+            android:name=".ui.activity.main.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Culina">
