@@ -1,26 +1,20 @@
-package com.d121211006.culina.ui.activity.detail
+package com.d121211006.culina.ui.activities.detail
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Typography
-import androidx.compose.ui.unit.dp
-import coil.compose.rememberImagePainter
-import com.d121211006.culina.R
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.d121211006.culina.data.models.Recipe
 import com.d121211006.culina.ui.theme.CulinaTheme
 
@@ -37,106 +31,31 @@ class DetailActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    DetailScreen()
+                    DetailScreen(selectedRecipe)
                 }
             }
         }
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    private fun DetailScreen() {
-        LazyColumn(
-            contentPadding = PaddingValues(16.dp)
-        ) {
+    private fun DetailScreen(recipe: Recipe?) {
+        LazyColumn {
             item {
-                DetailHeader()
-                Spacer(modifier = Modifier.height(16.dp))
-                DetailImage()
-                Spacer(modifier = Modifier.height(16.dp))
-                DetailInfo()
-            }
-        }
-    }
-
-    @Composable
-    private fun DetailHeader() {
-        CustomAppBar(
-            title = selectedRecipe?.title ?: "",
-            onNavigateUp = { onBackPressed() }
-        )
-    }
-
-    @Composable
-    private fun DetailImage() {
-        selectedRecipe?.let { recipe ->
-            Image(
-                painter = rememberImagePainter(data = recipe.image),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .background(Color.Gray)
-            )
-        }
-    }
-
-    @Composable
-    private fun DetailInfo() {
-        selectedRecipe?.let { recipe ->
-            Card(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth()
-            ) {
-                Column {
-                    Text(
-                        text = recipe.title ?: "Untitled Recipe",
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            fontWeight = FontWeight.Bold
-                        ),
-                        modifier = Modifier.padding(16.dp)
+                recipe?.let {
+                    AsyncImage(
+                        model = ImageRequest.Builder(context = LocalContext.current)
+                            .data(it.image)
+                            .crossfade(true)
+                            .build(),
+                        contentDescription = "Recipe Image",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxWidth()
                     )
-                    // Add more sections with detailed information about the recipe.
-                    // Customize based on your Recipe model.
+                    Text(text = it.title.toString())
+                } ?: run {
+                    Text(text = "Recipe not found")
                 }
             }
-        }
-    }
-
-
-    @Composable
-    fun DetailActivityPreview() {
-        CulinaTheme {
-            DetailScreen()
-        }
-    }
-
-    @Composable
-    private fun CustomAppBar(title: String, onNavigateUp: () -> Unit) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Using Text instead of IconButton
-            Text(
-                text = "<--", // You can customize the text as needed
-                modifier = Modifier.clickable { onNavigateUp() },
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            )
         }
     }
 }

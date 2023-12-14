@@ -8,23 +8,22 @@ import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 
 interface AppContainer {
-    val recipesRepository: RecipesRepository
+    val recipeRepository: RecipesRepository
 }
 
-class DefaultAppContainer: AppContainer {
+class DefaultAppContainer : AppContainer {
 
-    private val BASE_URL = "https://spoonacular.com"
+    private val BASE_URL = "https://api.spoonacular.com"
 
     private val retrofit = Retrofit.Builder()
         .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
         .baseUrl(BASE_URL)
         .build()
 
-    private val retrofitService : ApiService by lazy {
+    private val retrofitService: ApiService by lazy {
         retrofit.create(ApiService::class.java)
     }
 
-    override val recipesRepository: RecipesRepository
+    override val recipeRepository: RecipesRepository
         get() = RecipesRepository(retrofitService)
-
 }
