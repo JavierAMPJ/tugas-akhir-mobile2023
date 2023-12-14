@@ -1,18 +1,15 @@
-// File: com/d121211006/culina/data/response/GetRecipesRepository.kt
-package com.d121211006.culina.data.response
+package com.d121211006.culina.data.models
 
-import com.d121211006.culina.data.models.Recipe
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GetRecipesResponse(
+data class SpoonacularResponse(
     @SerialName("results")
-    val results: List<Recipe>?,
-    @SerialName("offset")
-    val offset: Int,
-    @SerialName("number")
-    val number: Int,
+    val results: List<Recipe> = emptyList(),
+    @SerialName("status")
+    val status: String?,
     @SerialName("totalResults")
-    val totalResults: Int
+    val totalResults: Int?
 )
+

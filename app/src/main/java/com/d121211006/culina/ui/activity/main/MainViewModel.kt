@@ -1,4 +1,4 @@
-package com.d121211006.culina.ui.activity.main
+package com.d121211006.culina.ui.activities.main
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -9,9 +9,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.d121211006.culina.data.repository.RecipesRepository
-import com.d121211006.culina.data.models.Recipe
 import com.d121211006.culina.MyApplication
+import com.d121211006.culina.data.models.Recipe
+import com.d121211006.culina.data.repository.RecipesRepository
 import kotlinx.coroutines.launch
 import java.io.IOException
 
@@ -26,33 +26,28 @@ class MainViewModel(private val recipesRepository: RecipesRepository) : ViewMode
     var mainUiState: MainUiState by mutableStateOf(MainUiState.Loading)
         private set
 
-    fun getRandomRecipe() = viewModelScope.launch {
+    fun getRandomRecipes() = viewModelScope.launch {
         mainUiState = MainUiState.Loading
         try {
-            val result = recipesRepository.getRandomRecipe("your_api_key_here")
-            if (result != null) {
-                Log.d("MainViewModel", "getRandomRecipe: ${result.title}")
-                mainUiState = MainUiState.Success(listOf(result))
-            } else {
-                Log.d("MainViewModel", "getRandomRecipe error: Recipe is null")
-                mainUiState = MainUiState.Error
-            }
+            val result = recipesRepository.getRandomRecipes(number = 10)
+            Log.d("MainViewModel", "getRandomRecipes: ${result.size}")
+            mainUiState = MainUiState.Success(result)
         } catch (e: IOException) {
-            Log.d("MainViewModel", "getRandomRecipe error: ${e.message}")
+            Log.d("MainViewModel", "getRandomRecipes error: ${e.message}")
             mainUiState = MainUiState.Error
         }
     }
 
     init {
-        getRandomRecipe()
+        getRandomRecipes()
     }
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MyApplication)
-                val recipesRepository = application.container.recipesRepository
-                MainViewModel(recipesRepository)
+                val recipeRepository = application.container.recipesRepository
+                MainViewModel(recipeRepository)
             }
         }
     }
